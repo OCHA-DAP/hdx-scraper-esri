@@ -28,9 +28,9 @@ jobs:
         HDX_KEY: ${{ secrets.HDX_BOT_SCRAPERS_API_TOKEN }}
         PREPREFIX: ${{ secrets.HDX_PIPELINE_PREPREFIX }}
         USER_AGENT: ${{ vars.USER_AGENT }}
-        EXTRA_PARAMS: ${{ vars.EXTRA_PARAMS }}
+        EXTRA_PARAMS: ${{ secrets.EXTRA_PARAMS }}
       run: |
-        python -m hdx.scraper.{{cookiecutter.scraper_name}}
+        python -m hdx.scraper.esri
     - name: Send mail
       if: failure()
       uses: dawidd6/action-send-mail@v3
