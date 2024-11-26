@@ -1,1 +1,2 @@
 # Collector specific configuration
+base_url: "https://gis.unocha.org/portal"

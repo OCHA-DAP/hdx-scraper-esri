@@ -28,7 +28,8 @@ jobs:
         HDX_KEY: ${{ secrets.HDX_BOT_SCRAPERS_API_TOKEN }}
         PREPREFIX: ${{ secrets.HDX_PIPELINE_PREPREFIX }}
         USER_AGENT: ${{ vars.USER_AGENT }}
-        EXTRA_PARAMS: ${{ secrets.EXTRA_PARAMS }}
+        ESRI_USERNAME: ${{ secrets.ESRI_USERNAME }}
+        ESRI_PASSWORD: ${{ secrets.ESRI_PASSWORD }}
       run: |
         python -m hdx.scraper.esri
     - name: Send mail
@@ -41,5 +42,5 @@ jobs:
         password: ${{secrets.HDX_PIPELINE_EMAIL_PASSWORD}}
         subject: "FAILED: ${{github.repository}} run job"
         body: GitHub Actions run job for ${{github.repository}} failed!
-        to: ${{secrets.HDX_PIPELINE_EMAIL_LIST}}
+        to: ${{vars.HDX_PIPELINE_EMAIL_LIST}}
         from: ${{secrets.HDX_PIPELINE_EMAIL_FROM}}
