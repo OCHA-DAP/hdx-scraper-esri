@@ -12,6 +12,7 @@ build-backend = "hatchling.build"
 name = "hdx-scraper-esri"
 requires-python = ">=3.11"
 dependencies = [
+  "arcgis",
   "hdx-python-api",
   "hdx-python-utilities",
 ]
