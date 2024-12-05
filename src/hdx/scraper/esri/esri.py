@@ -17,12 +17,10 @@ class Esri:
     def __init__(
         self,
         configuration: Configuration,
-        retriever: Retrieve,
         username: str,
         password: str,
     ):
         self._configuration = configuration
-        self._retriever = retriever
         self._username = username
         self._password = password
         self.data = {}
