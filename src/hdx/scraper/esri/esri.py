@@ -45,7 +45,8 @@ class Esri:
                 "url": content["url"],
             }
 
-    def generate_dataset(self, layer_info: dict) -> Optional[Dataset]:
+    def generate_dataset(self, layer_name: str) -> Optional[Dataset]:
+        layer_info = self.data[layer_name]
         dataset_name = layer_info["name"]
         dataset_title = layer_info["title"].replace("_", " ")
         dataset_time_period = layer_info["date_created"]

@@ -35,8 +35,7 @@ class TestEsri:
         esri.list_layers()
         assert esri.data == {}
 
-        _, layer_data = esri.data.items()
-        dataset = esri.generate_dataset(layer_data)
+        dataset = esri.generate_dataset("layer_name")
         dataset.update_from_yaml(path=join(config_dir, "hdx_dataset_static.yaml"))
         assert dataset == {}
 

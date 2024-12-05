@@ -51,8 +51,8 @@ def main(
         configuration = Configuration.read()
         esri = Esri(configuration, username, password)
         esri.list_layers()
-        for layer_name, layer_data in esri.data.items():
-            dataset = esri.generate_dataset(layer_data)
+        for layer_name in esri.data:
+            dataset = esri.generate_dataset(layer_name)
             dataset.update_from_yaml(
                 path=join(dirname(__file__), "config", "hdx_dataset_static.yaml")
             )
