@@ -1,7 +1,6 @@
 from os.path import join
 
 import pytest
-
 from hdx.api.configuration import Configuration
 from hdx.utilities.useragent import UserAgent
 
@@ -38,9 +37,7 @@ class Testesri:
 
         _, layer_data = esri.data.items()
         dataset = esri.generate_dataset(layer_data)
-        dataset.update_from_yaml(
-            path=join(config_dir, "hdx_dataset_static.yaml")
-        )
+        dataset.update_from_yaml(path=join(config_dir, "hdx_dataset_static.yaml"))
         assert dataset == {}
 
         resources = dataset.get_resources()

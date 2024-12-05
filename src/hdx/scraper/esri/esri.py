@@ -6,7 +6,6 @@ from datetime import datetime
 from typing import Optional
 
 import arcgis
-
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
 

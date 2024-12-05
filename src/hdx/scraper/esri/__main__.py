@@ -10,12 +10,13 @@ import logging
 from os import getenv
 from os.path import dirname, expanduser, join
 
-from esri import Esri
 from hdx.api.configuration import Configuration
 from hdx.facades.keyword_arguments import facade
 from hdx.utilities.path import (
     wheretostart_tempdir_batch,
 )
+
+from esri import Esri
 
 logger = logging.getLogger(__name__)
 
