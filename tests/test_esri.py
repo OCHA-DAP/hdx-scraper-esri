@@ -1,11 +1,11 @@
 from os.path import join
 
 import pytest
+
 from hdx.api.configuration import Configuration
-from hdx.utilities.downloader import Download
-from hdx.utilities.path import temp_dir
-from hdx.utilities.retriever import Retrieve
 from hdx.utilities.useragent import UserAgent
+
+from hdx.scraper.esri.esri import Esri
 
 
 class Testesri:
@@ -31,28 +31,17 @@ class Testesri:
     def config_dir(self, fixtures_dir):
         return join("src", "hdx", "scraper", "esri", "config")
 
-    def test_cesa(
-        self,
-        configuration,
-        fixtures_dir,
-        input_dir,
-        config_dir
-    ):
-        with temp_dir(
-            "Testesri",
-            delete_on_success=True,
-            delete_on_failure=False,
-        ) as tempdir:
-            with Download(user_agent="test") as downloader:
-                retriever = Retrieve(
-                    downloader=downloader,
-                    fallback_dir=tempdir,
-                    saved_dir=input_dir,
-                    temp_dir=tempdir,
-                    save=False,
-                    use_saved=True,
-                )
+    def test_esri(self, configuration, fixtures_dir, input_dir, config_dir):
+        esri = Esri(configuration, username="", password="")
+        esri.list_layers()
+        assert esri.data == {}
 
-                dataset.update_from_yaml(
-                    path=join(config_dir, "hdx_dataset_static.yaml")
-                )
+        _, layer_data = esri.data.items()
+        dataset = esri.generate_dataset(layer_data)
+        dataset.update_from_yaml(
+            path=join(config_dir, "hdx_dataset_static.yaml")
+        )
+        assert dataset == {}
+
+        resources = dataset.get_resources()
+        assert resources == {}

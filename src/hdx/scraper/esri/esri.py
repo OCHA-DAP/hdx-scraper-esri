@@ -2,13 +2,13 @@
 """esri scraper"""
 
 import logging
+from datetime import datetime
 from typing import Optional
 
 import arcgis
 
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
-from hdx.utilities.retriever import Retrieve
 
 logger = logging.getLogger(__name__)
 
@@ -31,17 +31,27 @@ class Esri:
             username=self._username,
             password=self._password,
         )
-        maps = portal.content.search(
-            query="type:Web Map", item_type="Web Map", max_items=1000
-        )
+        maps = portal.content.search(query="tags:HDX Public", max_items=1000)
+        for map in maps:
+            date_created = map["created"] / 1000
+            date_created = datetime.utcfromtimestamp(date_created)
+            self.data[map["name"]] = {
+                "name": map["name"],
+                "description": map["description"],
+                "date_created": date_created,
+                "owner": map["owner"],
+                "tags": map["tags"],
+                "title": map["title"],
+                "type": map["type"],
+                "url": map["url"],
+            }
 
-    def generate_dataset(self, layer: str) -> Optional[Dataset]:
-        # To be generated
-        dataset_name = None
-        dataset_title = None
-        dataset_time_period = None
-        dataset_tags = None
-        dataset_country_iso3 = None
+    def generate_dataset(self, layer_info: dict) -> Optional[Dataset]:
+        dataset_name = layer_info["name"]
+        dataset_title = layer_info["title"].replace("_", " ")
+        dataset_time_period = layer_info["date_created"]
+        dataset_tags = layer_info["tags"]
+        dataset_country_iso3 = dataset_name[:3]
 
         # Dataset info
         dataset = Dataset(
@@ -53,10 +63,16 @@ class Esri:
 
         dataset.set_time_period(dataset_time_period)
         dataset.add_tags(dataset_tags)
-        # Only if needed
         dataset.set_subnational(True)
         dataset.add_country_location(dataset_country_iso3)
 
-        # Add resources here
+        resource_data = {
+            "name": layer_info["name"],
+            "description": " ",
+            "url": layer_info["url"],
+            "format": layer_info["type"],
+        }
+
+        dataset.add_update_resource(resource_data)
 
         return dataset
