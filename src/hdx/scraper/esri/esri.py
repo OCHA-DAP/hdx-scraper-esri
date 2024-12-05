@@ -30,19 +30,19 @@ class Esri:
             username=self._username,
             password=self._password,
         )
-        maps = portal.content.search(query="tags:HDX Public", max_items=1000)
-        for map in maps:
-            date_created = map["created"] / 1000
+        contents = portal.content.search(query="tags:HDX Public", max_items=1000)
+        for content in contents:
+            date_created = content["created"] / 1000
             date_created = datetime.utcfromtimestamp(date_created)
-            self.data[map["name"]] = {
-                "name": map["name"],
-                "description": map["description"],
+            self.data[content["name"]] = {
+                "name": content["name"],
+                "description": content["description"],
                 "date_created": date_created,
-                "owner": map["owner"],
-                "tags": map["tags"],
-                "title": map["title"],
-                "type": map["type"],
-                "url": map["url"],
+                "owner": content["owner"],
+                "tags": content["tags"],
+                "title": content["title"],
+                "type": content["type"],
+                "url": content["url"],
             }
 
     def generate_dataset(self, layer_info: dict) -> Optional[Dataset]:
