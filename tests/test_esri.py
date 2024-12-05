@@ -7,7 +7,7 @@ from hdx.utilities.useragent import UserAgent
 from hdx.scraper.esri.esri import Esri
 
 
-class Testesri:
+class TestEsri:
     @pytest.fixture(scope="function")
     def configuration(self, config_dir):
         UserAgent.set_global("test")
