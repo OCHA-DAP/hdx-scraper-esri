@@ -11,6 +11,7 @@ from os import getenv
 from os.path import dirname, expanduser, join
 
 from hdx.api.configuration import Configuration
+from hdx.data.hdxobject import HDXError
 from hdx.facades.keyword_arguments import facade
 from hdx.utilities.errors_onexit import ErrorsOnExit
 from hdx.utilities.path import (
@@ -59,13 +60,16 @@ def main(
                     dataset.update_from_yaml(
                         path=join(dirname(__file__), "config", "hdx_dataset_static.yaml")
                     )
-                    dataset.create_in_hdx(
-                        remove_additional_resources=True,
-                        match_resource_order=False,
-                        hxl_update=False,
-                        updated_by_script=_UPDATED_BY_SCRIPT,
-                        batch=info["batch"],
-                    )
+                    try:
+                        dataset.create_in_hdx(
+                            remove_additional_resources=True,
+                            match_resource_order=False,
+                            hxl_update=False,
+                            updated_by_script=_UPDATED_BY_SCRIPT,
+                            batch=info["batch"],
+                        )
+                    except HDXError:
+                        errors_on_exit.add(f"{layer_name}: Failed to create dataset")
 
             logger.info("Finished processing")
 

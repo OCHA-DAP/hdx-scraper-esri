@@ -1,10 +1,10 @@
 license_id: cc-by
 methodology: Other
+methodology_other: Other
 caveats: None
-dataset_source: Proper name of source organization
+dataset_source: HDX
 package_creator: HDX Data Systems Team
 private: False
-maintainer: dataset maintainer HDX ID
-owner_org:  dataset organization HDX ID
-data_update_frequency: update frequency
-notes: dataset notes
+maintainer: aa13de36-28c5-47a7-8d0b-6d7c754ba8c8
+owner_org:  hdx
+data_update_frequency: 365

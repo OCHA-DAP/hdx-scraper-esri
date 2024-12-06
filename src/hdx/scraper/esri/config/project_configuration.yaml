@@ -1,2 +1,5 @@
 # Collector specific configuration
 base_url: "https://gis.unocha.org/portal"
+
+file_type_lookup:
+  "Vector Tile Service": "geoservice"

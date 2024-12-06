@@ -10,6 +10,7 @@ from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
 from hdx.location.country import Country
 from hdx.utilities.errors_onexit import ErrorsOnExit
+from slugify import slugify
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +52,7 @@ class Esri:
 
     def generate_dataset(self, layer_name: str) -> Optional[Dataset]:
         layer_info = self.data[layer_name]
-        dataset_name = layer_info["name"]
+        dataset_name = slugify(layer_info["name"])
         dataset_title = layer_info["title"]
         dataset_time_period = layer_info["date_created"]
         dataset_tags = layer_info["tags"]
@@ -59,13 +60,12 @@ class Esri:
 
         country_name = Country.get_country_name_from_iso3(dataset_country_iso3)
         if not country_name:
-            self._errors.add(f"{dataset_name}: Could not find country name")
+            self._errors.add(f"{layer_name}: Could not find country name")
             return None
 
         dataset_title = dataset_title.replace("_", " ")
         dataset_title = f"{country_name}: {dataset_title[4:]}"
 
-        # Dataset info
         dataset = Dataset(
             {
                 "name": dataset_name,
@@ -73,16 +73,27 @@ class Esri:
             }
         )
 
+        dataset["notes"] = layer_info["description"]  # dataset["notes"] = " "
+        if not dataset["notes"]:
+            self._errors.add(f"{layer_name}: No dataset description")
+            return None
         dataset.set_time_period(dataset_time_period)
-        dataset.add_tags(dataset_tags)
+        dataset.add_tags(dataset_tags)  # dataset.add_tags(["roads"])
+        if len(dataset.get_tags()) == 0:
+            self._errors.add(f"{layer_name}: No dataset tags")
+            return None
         dataset.set_subnational(True)
         dataset.add_country_location(dataset_country_iso3)
 
+        resource_format = layer_info["type"]
+        resource_format = self._configuration["file_type_lookup"].get(
+            resource_format, resource_format
+        )
         resource_data = {
             "name": layer_info["name"],
             "description": " ",
             "url": layer_info["url"],
-            "format": layer_info["type"],
+            "format": resource_format,
         }
 
         dataset.add_update_resource(resource_data)
