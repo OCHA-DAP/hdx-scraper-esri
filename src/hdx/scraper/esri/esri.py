@@ -8,6 +8,8 @@ from typing import Optional
 import arcgis
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
+from hdx.location.country import Country
+from hdx.utilities.errors_onexit import ErrorsOnExit
 
 logger = logging.getLogger(__name__)
 
@@ -18,10 +20,12 @@ class Esri:
         configuration: Configuration,
         username: str,
         password: str,
+        errors: ErrorsOnExit,
     ):
         self._configuration = configuration
         self._username = username
         self._password = password
+        self._errors = errors
         self.data = {}
 
     def list_layers(self) -> None:
@@ -48,10 +52,18 @@ class Esri:
     def generate_dataset(self, layer_name: str) -> Optional[Dataset]:
         layer_info = self.data[layer_name]
         dataset_name = layer_info["name"]
-        dataset_title = layer_info["title"].replace("_", " ")
+        dataset_title = layer_info["title"]
         dataset_time_period = layer_info["date_created"]
         dataset_tags = layer_info["tags"]
         dataset_country_iso3 = dataset_name[:3]
+
+        country_name = Country.get_country_name_from_iso3(dataset_country_iso3)
+        if not country_name:
+            self._errors.add(f"{dataset_name}: Could not find country name")
+            return None
+
+        dataset_title = dataset_title.replace("_", " ")
+        dataset_title = f"{country_name}: {dataset_title[4:]}"
 
         # Dataset info
         dataset = Dataset(

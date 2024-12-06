@@ -12,6 +12,7 @@ from os.path import dirname, expanduser, join
 
 from hdx.api.configuration import Configuration
 from hdx.facades.keyword_arguments import facade
+from hdx.utilities.errors_onexit import ErrorsOnExit
 from hdx.utilities.path import (
     wheretostart_tempdir_batch,
 )
@@ -47,22 +48,26 @@ def main(
     Returns:
         None
     """
-    with wheretostart_tempdir_batch(folder=_USER_AGENT_LOOKUP) as info:
-        configuration = Configuration.read()
-        esri = Esri(configuration, username, password)
-        esri.list_layers()
-        for layer_name in esri.data:
-            dataset = esri.generate_dataset(layer_name)
-            dataset.update_from_yaml(
-                path=join(dirname(__file__), "config", "hdx_dataset_static.yaml")
-            )
-            dataset.create_in_hdx(
-                remove_additional_resources=True,
-                match_resource_order=False,
-                hxl_update=False,
-                updated_by_script=_UPDATED_BY_SCRIPT,
-                batch=info["batch"],
-            )
+    with ErrorsOnExit() as errors_on_exit:
+        with wheretostart_tempdir_batch(folder=_USER_AGENT_LOOKUP) as info:
+            configuration = Configuration.read()
+            esri = Esri(configuration, username, password, errors_on_exit)
+            esri.list_layers()
+            for layer_name in esri.data:
+                dataset = esri.generate_dataset(layer_name)
+                if dataset is not None:
+                    dataset.update_from_yaml(
+                        path=join(dirname(__file__), "config", "hdx_dataset_static.yaml")
+                    )
+                    dataset.create_in_hdx(
+                        remove_additional_resources=True,
+                        match_resource_order=False,
+                        hxl_update=False,
+                        updated_by_script=_UPDATED_BY_SCRIPT,
+                        batch=info["batch"],
+                    )
+
+            logger.info("Finished processing")
 
 
 if __name__ == "__main__":
