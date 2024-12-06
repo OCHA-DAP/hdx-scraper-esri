@@ -84,7 +84,7 @@ if __name__ == "__main__":
         password = getenv("ESRI_PASSWORD")
     facade(
         main,
-        hdx_site="dev",
+        hdx_site="stage",
         user_agent_config_yaml=join(expanduser("~"), ".useragents.yaml"),
         user_agent_lookup=_USER_AGENT_LOOKUP,
         project_config_yaml=join(

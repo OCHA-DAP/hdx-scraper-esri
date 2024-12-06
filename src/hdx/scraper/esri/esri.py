@@ -73,16 +73,17 @@ class Esri:
             }
         )
 
-        dataset["notes"] = layer_info["description"]  # dataset["notes"] = " "
+        dataset["notes"] = layer_info["description"]
+        dataset["notes"] = "test"  # TODO: remove once working
         if not dataset["notes"]:
             self._errors.add(f"{layer_name}: No dataset description")
             return None
         dataset.set_time_period(dataset_time_period)
-        dataset.add_tags(dataset_tags)  # dataset.add_tags(["roads"])
+        dataset.add_tags(dataset_tags)
+        dataset.add_tags(["roads"])  # TODO: remove once working
         if len(dataset.get_tags()) == 0:
             self._errors.add(f"{layer_name}: No dataset tags")
             return None
-        dataset.set_subnational(True)
         dataset.add_country_location(dataset_country_iso3)
 
         resource_format = layer_info["type"]
