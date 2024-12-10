@@ -12,6 +12,7 @@ from os.path import dirname, expanduser, join
 
 from hdx.api.configuration import Configuration
 from hdx.data.hdxobject import HDXError
+from hdx.data.user import User
 from hdx.facades.keyword_arguments import facade
 from hdx.utilities.errors_onexit import ErrorsOnExit
 from hdx.utilities.path import (
@@ -49,6 +50,11 @@ def main(
     Returns:
         None
     """
+    if not User.check_current_user_organization_access("hdx", "create_dataset"):
+        raise PermissionError(
+            "API Token does not give access to HDX organisation!"
+        )
+
     with ErrorsOnExit() as errors_on_exit:
         with wheretostart_tempdir_batch(folder=_USER_AGENT_LOOKUP) as info:
             configuration = Configuration.read()
