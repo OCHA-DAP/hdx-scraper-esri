@@ -3,7 +3,7 @@
 
 import logging
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 import arcgis
 from hdx.api.configuration import Configuration
@@ -29,7 +29,7 @@ class Esri:
         self._errors = errors
         self.data = {}
 
-    def list_layers(self) -> None:
+    def list_layers(self) -> List[str]:
         portal = arcgis.gis.GIS(
             self._configuration["base_url"],
             username=self._username,
@@ -49,6 +49,7 @@ class Esri:
                 "type": content["type"],
                 "url": content["url"],
             }
+        return list(self.data.keys())
 
     def generate_dataset(self, layer_name: str) -> Optional[Dataset]:
         layer_info = self.data[layer_name]

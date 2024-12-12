@@ -59,8 +59,8 @@ def main(
     with ErrorsOnExit() as errors_on_exit:
         with wheretostart_tempdir_batch(folder=_USER_AGENT_LOOKUP) as info:
             esri = Esri(configuration, username, password, errors_on_exit)
-            esri.list_layers()
-            for layer_name in esri.data:
+            layer_names = esri.list_layers()
+            for layer_name in layer_names:
                 dataset = esri.generate_dataset(layer_name)
                 if dataset is not None:
                     dataset.update_from_yaml(
