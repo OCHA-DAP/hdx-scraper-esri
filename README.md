@@ -1,8 +1,8 @@
-# Collector for esri Datasets
+# Collector for Esri Datasets
 [![Build Status](https://github.com/OCHA-DAP/hdx-scraper-esri/actions/workflows/run-python-tests.yaml/badge.svg)](https://github.com/OCHA-DAP/hdx-scraper-esri/actions/workflows/run-python-tests.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-esri/badge.svg?branch=main&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-esri?branch=main)
 
-This script ...
+This script connects to the FIS ArcGIS Enterprise site and searches for datasets tagged as ready to be published on HDX. It collects metadata and creates corresponding datasets on HDX.
 
 ## Development
 
