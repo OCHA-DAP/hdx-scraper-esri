@@ -23,8 +23,7 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-    - name: Install libkrb5 for Kerberos on Linux
-      if: contains(matrix.os, 'ubuntu')
+    - name: Install libkrb5
       run: |
         sudo apt install -y libkrb5-dev
         pip install requests-kerberos
