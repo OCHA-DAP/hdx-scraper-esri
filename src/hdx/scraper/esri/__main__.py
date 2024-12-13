@@ -52,14 +52,13 @@ def main(
     """
     configuration = Configuration.read()
     if not User.check_current_user_organization_access("hdx", "create_dataset"):
-        raise PermissionError(
-            "API Token does not give access to HDX organisation!"
-        )
+        raise PermissionError("API Token does not give access to HDX organisation!")
 
     with ErrorsOnExit() as errors_on_exit:
         with wheretostart_tempdir_batch(folder=_USER_AGENT_LOOKUP) as info:
             esri = Esri(configuration, username, password, errors_on_exit)
-            layer_names = esri.list_layers()
+            content = esri.get_portal_contents()
+            layer_names = esri.list_layers(content)
             for layer_name in layer_names:
                 dataset = esri.generate_dataset(layer_name)
                 if dataset is not None:

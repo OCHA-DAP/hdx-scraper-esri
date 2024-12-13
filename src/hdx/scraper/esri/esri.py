@@ -29,13 +29,16 @@ class Esri:
         self._errors = errors
         self.data = {}
 
-    def list_layers(self) -> List[str]:
+    def get_portal_contents(self) -> List:
         portal = arcgis.gis.GIS(
             self._configuration["base_url"],
             username=self._username,
             password=self._password,
         )
         contents = portal.content.search(query="tags:HDX Public", max_items=1000)
+        return contents
+
+    def list_layers(self, contents: List) -> List[str]:
         for content in contents:
             date_created = content["created"] / 1000
             date_created = datetime.utcfromtimestamp(date_created)
